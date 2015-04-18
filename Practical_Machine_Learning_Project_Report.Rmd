@@ -110,7 +110,7 @@ print(accuracy)
 error = 1 - accuracy
 print(error)
 ```
-As we can see that we are getting overall accuracy of 99.64% and out of sample error is 0.3% which is really good for a real life problem. We can rely on this overall accuracy as classes ("A", "B","c","D" and "E") in **classe** are balanced. Also, kappa statistic is also high which suggest that random forest algorithm has performed well on this data.As we can see form the confusion matrix that we have missed 1, 3, 6,8 and 5 times ch category A, B, C, D and E and we correctly predict 3347, 2269, 2048, 1922 and 2160 times  for category A,B,C,D and E. 
+As we can see that we are getting overall accuracy of 99.64% and out of sample error is 0.36% which is really good for a real life problem. We can rely on this overall accuracy as classes ("A", "B","c","D" and "E") in **classe** are balanced. Also, kappa statistic is also high which suggest that random forest algorithm has performed well on this data.As we can see form the confusion matrix that we have missed 1, 3, 6,8 and 5 times ch category A, B, C, D and E and we correctly predict 3347, 2269, 2048, 1922 and 2160 times  for category A,B,C,D and E. 
 
 ## Present Results
 
