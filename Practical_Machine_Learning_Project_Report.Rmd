@@ -53,7 +53,7 @@ df_training <- df_training[,-c(1:6)]
  
 ```{r}
 cutoff <- dim(df_training)[1] * 0.9
-
+        
 train <- !apply(df_training, 2, function(x) sum(is.na(x)) > cutoff  || sum(x=="") > cutoff)
 df_training <- df_training[, train]
 
@@ -67,7 +67,7 @@ Now, we have 53 variables and one response variable **classe**. With this reduce
 This can be acheived with the code give below:
 
 ```{r}
-inTrain <- createDataPartition(df_training$classe,p = 0.01,list = FALSE)
+inTrain <- createDataPartition(df_training$classe,p = 0.6,list = FALSE)
 
 training <- df_training[inTrain,]
  
@@ -75,20 +75,23 @@ testing <- df_training[-inTrain,]
 ```
 ##Algorithm
 
-In order to reproduce same results, we set the seed. As we have 53 predictors, we will use random forest or C50 algorithm for solving this problem .C50 can deal with response variable having multiple categories. We will use random forest to solve this proble. First we will use random forest through **train** function in *caret* package. 
+In order to reproduce same results, we set the seed. As we have 53 predictors, we will use random forest or C50 algorithm for solving this problem .We will use random forest to solve this proble. First we will use random forest through **train** function in *caret* package. 
 
 
 ```{r}
 set.seed(12343)
-modFit <- train(classe ~ .,data = training,method = "rf", trControl=trainControl(method="cv",number=5),
+modFit <- train(classe ~ .,data = training,method = "rf", trControl=trainControl(method="cv",number=10),
                 prox=TRUE)
+print (modFit)
 modFit$finalModel
 modFit$results
 plot(modFit)
 importance <- varImp(modFit,scale = FALSE)
 plot(importance,top = 25)
-dotPlot(importance,top = 25)
 ```
+
+We have used 5 fold cross validation. Final model is the one with maximum accuracy. As we can see in graph that accuracy is maximum for the modle with 27 predictor. 
+
 
 We can see the top 25 variables which were used in random forest tree construction.
 
@@ -103,9 +106,12 @@ modFitPred = predict ( modFit , newdata = testing)
 y <- table(modFitPred,testing$classe)
 
 accuracy <- sum(diag(y))/sum(y)
-accuracy
+print(accuracy)
+error = 1 - accuracy
+print(error)
 ```
-As we can see that we are getting overall accuracy of 99.7% which is really good for a real life problem. We can rely on this overall accuracy as classes ("A", "B","c","D" and "E") in **classe** are balanced. Also, kappa statistic is also high which suggest that random forest algorithm has performed well on this data.As we can see form the confusion matrix that we have missed 1, 3, 6,8 and 5 times ch category A, B, C, D and E and we correctly predict 3347, 2269, 2048, 1922 and 2160 times  for category A,B,C,D and E. 
+As we can see that we are getting overall accuracy of 99.64% and out of sample error is 0.3% which is really good for a real life problem. We can rely on this overall accuracy as classes ("A", "B","c","D" and "E") in **classe** are balanced. Also, kappa statistic is also high which suggest that random forest algorithm has performed well on this data.As we can see form the confusion matrix that we have missed 1, 3, 6,8 and 5 times ch category A, B, C, D and E and we correctly predict 3347, 2269, 2048, 1922 and 2160 times  for category A,B,C,D and E. 
+
 ## Present Results
 
 We were asked to generate results using the model on df_testing data frame. 
